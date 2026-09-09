@@ -1,0 +1,238 @@
+@import "tailwindcss";
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background: #121017;
+  color: #ece8de;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #3a3446;
+  border-radius: 999px;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.25s ease-out;
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(217, 160, 66, 0.35); }
+  100% { box-shadow: 0 0 0 8px rgba(217, 160, 66, 0); }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 1.6s ease-out infinite;
+}
+
+@keyframes watermark-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(8%, 6%); }
+}
+.animate-watermark-drift {
+  animation: watermark-drift 9s ease-in-out infinite;
+}
+
+/* Per-scene slideshow motion (src/utils/sceneMotion.ts). Every one of
+   these keeps scale >= ~1.05 throughout so a pan never reveals an edge of
+   the source image, which is drawn with object-fit: cover. */
+@keyframes image-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes anim-zoom-in {
+  from { transform: scale(1.02); }
+  to { transform: scale(1.16); }
+}
+@keyframes anim-zoom-out {
+  from { transform: scale(1.16); }
+  to { transform: scale(1.02); }
+}
+@keyframes anim-pan-left {
+  from { transform: scale(1.12) translateX(3%); }
+  to { transform: scale(1.12) translateX(-3%); }
+}
+@keyframes anim-pan-right {
+  from { transform: scale(1.12) translateX(-3%); }
+  to { transform: scale(1.12) translateX(3%); }
+}
+@keyframes anim-pan-up {
+  from { transform: scale(1.12) translateY(3%); }
+  to { transform: scale(1.12) translateY(-3%); }
+}
+@keyframes anim-pan-down {
+  from { transform: scale(1.12) translateY(-3%); }
+  to { transform: scale(1.12) translateY(3%); }
+}
+@keyframes anim-ken-burns {
+  from { transform: scale(1.04) translate(2%, 2%); }
+  to { transform: scale(1.2) translate(-2%, -2%); }
+}
+@keyframes anim-pulse {
+  0% { transform: scale(1.04); }
+  50% { transform: scale(1.11); }
+  100% { transform: scale(1.04); }
+}
+@keyframes anim-rotate-left {
+  from { transform: scale(1.08) rotate(-2deg); }
+  to { transform: scale(1.16) rotate(2deg); }
+}
+@keyframes anim-rotate-right {
+  from { transform: scale(1.08) rotate(2deg); }
+  to { transform: scale(1.16) rotate(-2deg); }
+}
+@keyframes anim-drift {
+  from { transform: scale(1.05) translate(-2%, -1%); }
+  to { transform: scale(1.05) translate(2%, 1%); }
+}
+/* A fast, energetic jitter (action/comedy beats) rather than a slow pan --
+   scale stays just large enough (1.06) to cover the small +/-1.5% wander
+   below without ever exposing an edge of the cover-fit source image. */
+@keyframes anim-shake {
+  0%, 100% { transform: scale(1.06) translate(0, 0); }
+  10% { transform: scale(1.06) translate(1.5%, -1%); }
+  20% { transform: scale(1.06) translate(-1.5%, 1%); }
+  30% { transform: scale(1.06) translate(1%, 1.5%); }
+  40% { transform: scale(1.06) translate(-1%, -1.5%); }
+  50% { transform: scale(1.06) translate(1.5%, 0.5%); }
+  60% { transform: scale(1.06) translate(-1.5%, -0.5%); }
+  70% { transform: scale(1.06) translate(1%, -1%); }
+  80% { transform: scale(1.06) translate(-1%, 1%); }
+  90% { transform: scale(1.06) translate(0.5%, -1.5%); }
+}
+
+/* Readers who've asked the OS for reduced motion still get the entrance
+   fade (a plain opacity change, not considered motion) but every pan/zoom
+   keyframe collapses to a fixed, gently-zoomed frame instead of animating. */
+@media (prefers-reduced-motion: reduce) {
+  @keyframes anim-zoom-in { from, to { transform: scale(1.06); } }
+  @keyframes anim-zoom-out { from, to { transform: scale(1.06); } }
+  @keyframes anim-pan-left { from, to { transform: scale(1.12) translateX(0); } }
+  @keyframes anim-pan-right { from, to { transform: scale(1.12) translateX(0); } }
+  @keyframes anim-pan-up { from, to { transform: scale(1.12) translateY(0); } }
+  @keyframes anim-pan-down { from, to { transform: scale(1.12) translateY(0); } }
+  @keyframes anim-ken-burns { from, to { transform: scale(1.08); } }
+  @keyframes anim-pulse { from, to { transform: scale(1.06); } }
+  @keyframes anim-rotate-left { from, to { transform: scale(1.12) rotate(0deg); } }
+  @keyframes anim-rotate-right { from, to { transform: scale(1.12) rotate(0deg); } }
+  @keyframes anim-drift { from, to { transform: scale(1.05) translate(0, 0); } }
+  @keyframes anim-shake { from, to { transform: scale(1.06) translate(0, 0); } }
+  .animate-watermark-drift { animation: none; }
+}
+
+/* Caption word "bounce" reveal (CaptionOverlay in SlideshowPlayer.tsx) --
+   a short spring-like overshoot played once as each word becomes current,
+   retriggered by remounting that word's span (a fresh `key`) rather than
+   looping like the scene-motion keyframes above. */
+@keyframes caption-bounce {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-38%) scale(1.06); }
+  55% { transform: translateY(4%) scale(0.98); }
+  78% { transform: translateY(-10%) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  @keyframes caption-bounce { from, to { transform: translateY(0) scale(1); } }
+}
+
+/* Vector overlay particles (src/components/SceneOverlay.tsx). Each
+   particle sets its own animation-duration/-delay inline; only the motion
+   curve is shared here. --sway is a per-particle custom property (a small
+   signed number) for horizontal wander, referenced via calc() below.
+
+   Travel distances are all in cqw (container query *width*), not cqh --
+   the frame only sets `containerType: inline-size` (see SlideshowPlayer),
+   because `container-type: size` (which would make cqh resolve too)
+   carries a real collapse risk: a size-contained box that depends on
+   content or aspect-ratio for its own dimensions can resolve to 0x0
+   instead, which is exactly what happened here once (the whole player
+   went invisible). cqw-only means a vertical 9:16 frame's fall distances
+   are tuned for *that* height being roughly 1.78x its width -- they'll be
+   a little off for 1:1 or 16:9, which is a fine trade for the layout
+   never collapsing. */
+@keyframes fx-sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.3) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(25deg); }
+}
+.fx-sparkle {
+  animation-name: fx-sparkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes fx-dust {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 1; }
+  50% { transform: translate(calc(var(--sway, 0) * 1cqw), -7cqw); }
+  90% { opacity: 1; }
+  100% { transform: translate(calc(var(--sway, 0) * -1cqw), 3.5cqw); opacity: 0; }
+}
+.fx-dust {
+  animation-name: fx-dust;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes fx-snow {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { transform: translate(calc(var(--sway, 0) * 1cqw), 210cqw) rotate(180deg); opacity: 0; }
+}
+.fx-snow {
+  animation-name: fx-snow;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes fx-rain {
+  from { transform: translateY(0); }
+  to { transform: translateY(230cqw); }
+}
+.fx-rain {
+  animation-name: fx-rain;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes fx-ember {
+  0% { transform: translate(0, 0); opacity: 0; }
+  15% { opacity: 0.9; }
+  100% { transform: translate(calc(var(--sway, 0) * 1cqw), -195cqw); opacity: 0; }
+}
+.fx-ember {
+  animation-name: fx-ember;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes fx-light-ray {
+  0% { transform: translateX(-120px); }
+  100% { transform: translateX(120px); }
+}
+.fx-light-ray {
+  animation-name: fx-light-ray;
+  animation-duration: 9s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  mix-blend-mode: screen;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-sparkle, .fx-dust, .fx-snow, .fx-rain, .fx-ember, .fx-light-ray {
+    animation: none !important;
+    opacity: 0.35;
+  }
+}

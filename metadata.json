@@ -1,0 +1,8 @@
+{
+  "name": "Storyframe",
+  "description": "AI-powered illustrated storyboard and video generator turning narratives into scenes with narration and animation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

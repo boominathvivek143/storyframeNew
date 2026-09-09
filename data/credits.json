@@ -1,0 +1,18 @@
+{
+  "usr_1788887442718_wber21i": {
+    "userId": "usr_1788887442718_wber21i",
+    "credits": 50,
+    "totalRechargedCredits": 0,
+    "transactions": [
+      {
+        "id": "tx_1788887442722_init",
+        "type": "initial",
+        "amount": 50,
+        "description": "Welcome Gift: VIP Creator Token Allocation",
+        "timestamp": 1788887442722
+      }
+    ],
+    "createdAt": 1788887442722,
+    "updatedAt": 1788887442722
+  }
+}
